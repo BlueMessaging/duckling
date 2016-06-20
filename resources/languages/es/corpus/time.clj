@@ -7,7 +7,7 @@
   "ahorita"
   "cuanto antes"
   (datetime 2013 2 12 4 30 00)
-  
+
   "hoy"
   "en este momento"
   (datetime 2013 2 12)
@@ -60,10 +60,23 @@
   "el 5 de mayo"
   "el cinco de mayo"
   (datetime 2013 5 5 :day 5 :month 5)
-  
+
+  "el 18 de marzo"
+  "18 de marzo"
+  (datetime 2013 3 18 :day 18 :month 3)
+
+  "12 de diciembre del 2015"
+  "12 de diciembre del 15"
+  (datetime 2015 12 12 :day 12 :month 12)
+
   "el cinco de mayo de 2013"
   "mayo 5 del 2013" ; in part of latin america
   "5-5-2013"
+  "5 de mayo de 2013"
+  "5/5/2013"
+  "5/may/2013"
+  "5/may/13"
+  "5/5/13"
   (datetime 2013 5 5 :day 5 :month 5 :year 2013)
 
   "el 4 de julio"
@@ -106,7 +119,7 @@
   "20 de febrero"
   "20/2"
   (datetime 2013 2 20 :day 20 :month 2)
-  
+
   "31/10/1974"
   "31/10/74" ; smart two-digit year resolution
   (datetime 1974 10 31 :day 31 :month 10 :year 1974)
@@ -127,32 +140,32 @@
 
   "el miércoles de esta semana"
   (datetime 2013 2 13 :day-of-week 2)
-  
+
  ;  ;; Cycles
-  
+
   "esta semana"
   (datetime 2013 2 11 :grain :week)
 
   "la semana pasada"
   (datetime 2013 2 4 :grain :week)
-  
+
   "la semana que viene"
   "la proxima semana"
   (datetime 2013 2 18 :grain :week)
-  
+
   "el pasado mes"
   (datetime 2013 1)
 
   "el mes que viene"
   "el proximo mes"
   (datetime 2013 3)
-  
+
   "el año pasado"
   (datetime 2012)
-  
+
   "este ano"
   (datetime 2013)
-  
+
   "el año que viene"
   "el proximo ano"
   (datetime 2014)
@@ -231,17 +244,17 @@
 
   "6 de la mañana"
   (datetime 2013 2 12 6 - 7)
-  
+
   "miércoles a las once de la mañana"
   (datetime 2013 2 13 11 :hour 11 :day-of-week 3)
-  
+
   "mañana a las once"
   "mañana a 11"
   (datetime 2013 2 13 11 :hour 11)
 
   ;"viernes a las doce"
   ;(datetime 2013 2 15 12 :hour 12 :day-of-week 5)
-  
+
   ;"viernes a las 12:00 horas"
   ;(datetime 2013 2 15 12 0 :hour 12 :day-of-week 5 :minute 0)
 
@@ -252,50 +265,50 @@
 
   "en un segundo"
   (datetime 2013 2 12 4 30 1)
-  
+
   "en un minuto"
   "en 1 min"
   (datetime 2013 2 12 4 31 0)
-  
+
   "en 2 minutos"
   "en dos minutos"
   (datetime 2013 2 12 4 32 0)
-  
+
   "en 60 minutos"
   (datetime 2013 2 12 5 30 0)
-  
+
   "en una hora"
   (datetime 2013 2 12 5 30)
 
   "hace dos horas"
   (datetime 2013 2 12 2 30)
-  
+
   "en 24 horas"
   "en veinticuatro horas"
   (datetime 2013 2 13 4 30)
-  
+
   "en un dia"
   (datetime 2013 2 13 4)
-  
+
   "en 7 dias"
   (datetime 2013 2 19 4)
-  
+
   "en una semana"
   (datetime 2013 2 19)
-  
+
   "hace tres semanas"
   (datetime 2013 1 22)
-  
+
   "en dos meses"
   (datetime 2013 4 12)
-  
+
   "hace tres meses"
   (datetime 2012 11 12)
 
   "en un ano"
   "en 1 año"
   (datetime 2014 2)
-  
+
   "hace dos años"
   (datetime 2011 2)
 
@@ -307,7 +320,7 @@
   "este invierno"
   (datetime-interval [2012 12 21] [2013 3 21])
 
-  ; ES holidays 
+  ; ES holidays
 
   "Navidad"
   "la Navidad"
@@ -328,10 +341,10 @@
   "mañana por la noche"
   ;"miércoles por la noche"
   (datetime-interval [2013 2 13 18] [2013 2 14 00])
-  
+
   "ayer por la noche"
-  (datetime-interval [2013 2 11 18] [2013 2 12 00])  
-  
+  (datetime-interval [2013 2 11 18] [2013 2 12 00])
+
   "este weekend"
   "este fin de semana"
   (datetime-interval [2013 2 15 18] [2013 2 18 00])
@@ -339,7 +352,7 @@
   "lunes por la mañana"
   (datetime-interval [2013 2 18 4] [2013 2 18 12])
 
-  "el 15 de febrero por la mañana" 
+  "el 15 de febrero por la mañana"
   (datetime-interval [2013 2 15 4] [2013 2 15 12])
 
   "a las 8 de la tarde"
@@ -367,7 +380,7 @@
 
   "proximos 3 dias"
   (datetime-interval [2013 2 13] [2013 2 16])
-    
+
   "pasadas dos semanas"
   (datetime-interval [2013 1 28 :grain :week] [2013 2 11 :grain :week])
 
@@ -387,12 +400,12 @@
   "pasados 2 anos"
   "dos pasados años"
   (datetime-interval [2011] [2013])
-  
+
   "3 próximos años"
   "proximo tres años"
   "3 años que vienen"
-  (datetime-interval [2014] [2017]) 
-  
+  (datetime-interval [2014] [2017])
+
   ; Explicit intervals
 
   "13 a 15 de julio"

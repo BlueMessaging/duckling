@@ -10,7 +10,10 @@
             [duckling.resource :as res]
             [duckling.time.api :as api]
             [duckling.time.obj :as time]
-            [duckling.util :as util]))
+            [duckling.util :as util])
+  (:gen-class
+    :methods [[loadSpanish [] void]
+             [parseTimeSpanish [String] String]]))
 
 (defonce rules-map (atom {}))
 (defonce corpus-map (atom {}))
@@ -375,6 +378,12 @@
         :winners
         (map #(assoc % :value (engine/export-value % {})))
         (map #(select-keys % [:dim :body :value :start :end :latent])))))
+
+;---------------------------------------------------------------------------
+; For java invoke
+;---------------------------------------------------------------------------
+(defn -loadSpanish [this] (load! {:languages ["es"]}))
+(defn -parseTimeSpanish [this str] (((first (parse :es$core str [:time])) :value) :value))
 
 
 ;--------------------------------------------------------------------------
