@@ -12,8 +12,9 @@
             [duckling.time.obj :as time]
             [duckling.util :as util])
   (:gen-class
-    :methods [[loadSpanish [] void]
-             [parseTimeSpanish [String] String]]))
+    :methods [[loadSupportedLanguages [] void]
+             [parseTimeSpanish [String] String]
+             [parseTimeEnglish [String] String]]))
 
 (defonce rules-map (atom {}))
 (defonce corpus-map (atom {}))
@@ -382,8 +383,9 @@
 ;---------------------------------------------------------------------------
 ; For java invoke
 ;---------------------------------------------------------------------------
-(defn -loadSpanish [this] (load! {:languages ["es"]}))
+(defn -loadSupportedLanguages [this] (load! {:languages ["es", "en"]}))
 (defn -parseTimeSpanish [this str] (((first (parse :es$core str [:time])) :value) :value))
+(defn -parseTimeEnglish [this str] (((first (parse :en$core str [:time])) :value) :value))
 
 
 ;--------------------------------------------------------------------------

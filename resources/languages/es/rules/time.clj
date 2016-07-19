@@ -17,12 +17,12 @@
 
   ; same thing, with "/" in between like "14/febrero/1999"
   "intersect by / no latent"
-  [(dim :time #(not (:latent %))) #"(?i)/" (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
+  [(dim :time #(not (:latent %))) #"(?i)/|-" (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
   (intersect %1 %3)
 
   ; same thing, with "/" in between like "14/febrero/1999"
   "intersect by / latent"
-  [(dim :time #(not (:latent %))) #"(?i)/" (dim :time #(:latent %))] ; sequence of two tokens with a time fn
+  [(dim :time #(not (:latent %))) #"(?i)/|-" (dim :time #(:latent %))] ; sequence of two tokens with a time fn
   (intersect %1 %3)
 
   ; mostly for lunes, 18 de febrero
@@ -214,6 +214,14 @@
   "<day-of-month> de <named-month>" ; 4 de julio
   [(integer 1 31) #"(?i)de" {:form :month}]
   (intersect %3 (day-of-month (:value %1)))
+  
+  "<day-of-month> <named-month> <year>" ; 4 julio 81
+  [(integer 1 31) {:form :month} (dim :time #(:latent %))]
+  (intersect %3 (intersect %2 (day-of-month (:value %1))))
+  
+  "<day-of-month> <named-month> <year>" ; 4 julio 1981
+  [(integer 1 31) {:form :month} (dim :time #(not (:latent %)))]
+  (intersect %3 (intersect %2 (day-of-month (:value %1))))
 
   "<day-of-month> / <named-month>" ; 4 / julio
   [(integer 1 31) #"(?i)/" {:form :month}]

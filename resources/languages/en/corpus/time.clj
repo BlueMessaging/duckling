@@ -66,6 +66,8 @@
   "march 3 2015"
   "march 3rd 2015"
   "march third 2015"
+  "03 march 15"
+  "3 march 15"
   "3/3/2015"
   "3/3/15"
   "2015-3-3"
@@ -100,6 +102,8 @@
   "14april 2015"
   "April 14, 2015"
   "14th April 15"
+  "14 april 15"
+  "14 april 2015"
   (datetime 2015 4 14 :day 14 :month 4 :years 2015)
 
   "next tuesday" ; when today is Tuesday, "mardi prochain" is a week from now

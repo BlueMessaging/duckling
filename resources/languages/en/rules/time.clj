@@ -5,6 +5,50 @@
   [(dim :time #(not (:latent %))) (dim :time #(not (:latent %)))] ; sequence of two tokens with a time dimension
   (intersect %1 %2)
 
+  "<day-of-month> <named-month> <year>" ; 4 july 81
+  [(integer 1 31) {:form :month} (dim :time #(:latent %))]
+  (intersect %3 (intersect %2 (day-of-month (:value %1))))
+  
+  "<named-month> <day-of-month> <year>" ; july 04 81
+  [{:form :month} (integer 1 31) (dim :time #(:latent %))]
+  (intersect %3 (intersect %1 (day-of-month (:value %2))))
+  
+  "<named-month> <day-of-month> (ordinal)" ; march 12th 89
+  [{:form :month} (dim :ordinal #(<= 1 (:value %) 31)) (dim :time #(:latent %))]
+  (intersect %3 (intersect %1 (day-of-month (:value %2))))
+  
+  "<named-month> <day-of-month> <year>" ; july 04 1981
+  [{:form :month} (integer 1 31) (dim :time #(not (:latent %)))]
+  (intersect %3 (intersect %1 (day-of-month (:value %2))))
+  
+  "<day-of-month> <named-month> <year>" ; 04 july 1981
+  [(integer 1 31) {:form :month} (dim :time #(not (:latent %)))]
+  (intersect %3 (intersect %2 (day-of-month (:value %1))))
+  
+  "<named-month> <day-of-month> (ordinal)" ; march 12th 1989
+  [{:form :month} (dim :ordinal #(<= 1 (:value %) 31)) (dim :time #(not (:latent %)))]
+  (intersect %3 (intersect %1 (day-of-month (:value %2))))
+  
+  ; same thing, with "/" in between like "february/14/1999"
+  "intersect by / no latent"
+  [{:form :month} #"(?i)/|-" (integer 1 31) #"(?i)/|-" (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
+  (intersect %5 (intersect %1 (day-of-month (:value %3))))
+  
+  ; same thing, with "/" in between like "february/14/99"
+  "intersect by / no latent"
+  [{:form :month} #"(?i)/|-" (integer 1 31) #"(?i)/|-" (dim :time #(:latent %))] ; sequence of two tokens with a time fn
+  (intersect %5 (intersect %1 (day-of-month (:value %3))))
+  
+  ; same thing, with "/" in between like "14/february/1999"
+  "intersect by / no latent"
+  [(integer 1 31) #"(?i)/|-" {:form :month} #"(?i)/|-" (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
+  (intersect %5 (intersect %3 (day-of-month (:value %1))))
+  
+  ; same thing, with "/" in between like "14/february/99"
+  "intersect by / no latent"
+  [(integer 1 31) #"(?i)/|-" {:form :month} #"(?i)/|-" (dim :time #(:latent %))] ; sequence of two tokens with a time fn
+  (intersect %5 (intersect %3 (day-of-month (:value %1))))
+
   ; same thing, with "of" in between like "Sunday of last week"
   "intersect by \"of\", \"from\", \"'s\""
   [(dim :time #(not (:latent %))) #"(?i)of|from|for|'s" (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
@@ -14,20 +58,41 @@
   ; this is a separate rule, because commas separate very specific tokens
   ; so we want this rule's classifier to learn this
   "intersect by \",\""
-  [(dim :time #(not (:latent %))) #"," (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
-  (intersect %1 %3)
+  [{:form :month}  (integer 1 31) #"," (dim :time #(not (:latent %)))] ; sequence of two tokens with a time fn
+  (intersect %4 (intersect %1 (day-of-month (:value %2))))
+  
+  ; mostly for January 12, 05
+  ; this is a separate rule, because commas separate very specific tokens
+  ; so we want this rule's classifier to learn this
+  "intersect by \",\""
+  [{:form :month}  (integer 1 31) #"," (dim :time #(:latent %))] ; sequence of two tokens with a time fn
+  (intersect %4 (intersect %1 (day-of-month (:value %2))))
+  
+  ; mostly for march 12th, 1989
+  "<named-month> <day-of-month> (ordinal)" ; march 12th, 1989
+  [{:form :month} (dim :ordinal #(<= 1 (:value %) 31)) #"," (dim :time #(not (:latent %)))]
+  (intersect %4 (intersect %1 (day-of-month (:value %2))))
+  
+  ; mostly for march 12th, 89
+  "<named-month> <day-of-month> (ordinal)" ; march 12th, 89
+  [{:form :month} (dim :ordinal #(<= 1 (:value %) 31)) #"," (dim :time #(:latent %))]
+  (intersect %4 (intersect %1 (day-of-month (:value %2))))
 
-  "on <date>" ; on Wed, March 23
-  [#"(?i)on" (dim :time)]
-  %2 ; does NOT dissoc latent
+  ;The following two rules were commented as they were too ambiguous.
 
-  "on a named-day" ; on a sunday
-  [#"(?i)on a" {:form :day-of-week}]
-  %2 ; does NOT dissoc latent
+  ;"on <date>" ; on Wed, March 23
+  ;[#"(?i)on" (dim :time)]
+  ;%2 ; does NOT dissoc latent
+
+  ;"on a named-day" ; on a sunday
+  ;[#"(?i)on a" {:form :day-of-week}]
+  ;%2 ; does NOT dissoc latent
 
 
   ;;;;;;;;;;;;;;;;;;;
   ;; Named things
+
+  ;These rules were modified to include year 100 which marks the date as ambiguous.
 
   "named-day"
   #"(?i)monday|mon\.?"
@@ -261,7 +326,7 @@
   [#"(?i)the" (dim :ordinal) (dim :time) #"(?i)after" (dim :time)]
   (pred-nth-after %3 %5 (dec (:value %2)))
 
-    ; Years
+  ; Years
   ; Between 1000 and 2100 we assume it's a year
   ; Outside of this, it's safer to consider it's latent
 
@@ -277,7 +342,7 @@
   (integer 2101 10000)
   (assoc (year (:value %1)) :latent true)
 
-    ; Day of month appears in the following context:
+  ; Day of month appears in the following context:
   ; - the nth
   ; - March nth
   ; - nth of March
@@ -296,37 +361,44 @@
   [#"(?i)the" (integer 1 31)]
   (assoc (day-of-month (:value %2)) :latent true)
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "<named-month> <day-of-month> (ordinal)" ; march 12th
   [{:form :month} (dim :ordinal #(<= 1 (:value %) 31))]
-  (intersect %1 (day-of-month (:value %2)))
+  (intersect (year 100) (intersect %1 (day-of-month (:value %2))))
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "<named-month> <day-of-month> (non ordinal)" ; march 12
   [{:form :month} (integer 1 31)]
-  (intersect %1 (day-of-month (:value %2)))
+  (intersect (year 100) (intersect %1 (day-of-month (:value %2))))
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "<day-of-month> (ordinal) of <named-month>"
   [(dim :ordinal #(<= 1 (:value %) 31)) #"(?i)of|in" {:form :month}]
-  (intersect %3 (day-of-month (:value %1)))
+  (intersect (year 100) (intersect %3 (day-of-month (:value %1))))
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "<day-of-month> (non ordinal) of <named-month>"
   [(integer 1 31) #"(?i)of|in" {:form :month}]
-  (intersect %3 (day-of-month (:value %1)))
+  (intersect (year 100) (intersect %3 (day-of-month (:value %1))))
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "<day-of-month> (non ordinal) <named-month>" ; 12 mars
   [(integer 1 31) {:form :month}]
-  (intersect %2 (day-of-month (:value %1)))
+  (intersect (year 100) (intersect %2 (day-of-month (:value %1))))
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "<day-of-month>(ordinal) <named-month>" ; 12nd mars
   [(dim :ordinal #(<= 1 (:value %) 31)) {:form :month}]
-  (intersect %2 (day-of-month (:value %1)))
+  (intersect (year 100) (intersect %2 (day-of-month (:value %1))))
 
   "<day-of-month>(ordinal) <named-month> year" ; 12nd mars 12
   [(dim :ordinal #(<= 1 (:value %) 31)) {:form :month} #"(\d{2,4})"]
   (intersect %2 (day-of-month (:value %1)) (year (Integer/parseInt(first (:groups %3)))))
 
+  ; Rule marks the year as 100 which indicates ambiguity.
   "the ides of <named-month>" ; the ides of march 13th for most months, but on the 15th for March, May, July, and October
   [#"(?i)the ides? of" {:form :month}]
-  (intersect %2 (day-of-month (if (#{3 5 7 10} (:month %2)) 15 13)))
+  (intersect (year 100) (intersect %2 (day-of-month (if (#{3 5 7 10} (:month %2)) 15 13))))
 
   ;; Hours and minutes (absolute time)
 
