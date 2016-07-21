@@ -77,6 +77,35 @@
 (defn month [mo]
   {:pre [(<= 1 mo 12)]}
   (ti (p/month mo) {:form :month :month mo}))
+  
+(defn namedMonthToNumber [map]
+      (let [str (map :text)]
+      (cond
+        (re-matches #"(?i)january|jan\.?" str)  (month 1)
+        (re-matches #"(?i)february|feb\.?" str) (month 2)
+        (re-matches #"(?i)march|mar\.?" str) (month 3)
+        (re-matches #"(?i)april|apr\.?" str) (month 4)
+        (re-matches #"(?i)may" str) (month 5)
+        (re-matches #"(?i)june|jun\.?" str) (month 6)
+        (re-matches #"(?i)july|jul\.?" str) (month 7)
+        (re-matches #"(?i)august|aug\.?" str) (month 8)
+        (re-matches #"(?i)september|sept?\.?" str) (month 9)
+        (re-matches #"(?i)october|oct\.?" str) (month 10)
+        (re-matches #"(?i)november|nov\.?" str) (month 11)
+        (re-matches #"(?i)december|dec\.?" str) (month 12)
+      )))
+      
+(defn namedDayToNumber [map]
+      (let [str (map :text)]
+      (cond
+        (re-matches #"(?i)monday|mon\.?" str)  (day-of-week 1)
+        (re-matches #"(?i)tuesday|tues?\.?" str) (day-of-week 2)
+        (re-matches #"(?i)wed?nesday|wed\.?" str) (day-of-week 3)
+        (re-matches #"(?i)thursday|thu(rs?)?\.?" str) (day-of-week 4)
+        (re-matches #"(?i)friday|fri\.?" str) (day-of-week 5)
+        (re-matches #"(?i)saturday|sat\.?" str) (day-of-week 6)
+        (re-matches #"(?i)sunday|sun\.?" str) (day-of-week 7)
+      )))
 
 (defn day-of-month [day]
   {:pre [(<= 1 day 31)]}
@@ -251,3 +280,17 @@
          (or (nil? min) (<= min (:value token)))
          (or (nil? max) (<= (:value token) max))
          (every? #(% token) predicates))))
+         
+(defn holidayToDate [map]
+      (let [str (map :text)]
+      (cond
+        (re-matches #"(?i)(xmas|christmas)( day)?" str)  (month-day 12 25)
+        (re-matches #"(?i)(xmas|christmas)( day)?('s)? eve" str) (month-day 12 24)
+        (re-matches #"(?i)new year'?s? eve" str) (month-day 12 31)
+        (re-matches #"(?i)new year'?s?( day)?" str) (month-day 1 1)
+        (re-matches #"(?i)valentine'?s?( day)?" str) (month-day 2 14)
+        (re-matches #"(?i)memorial day" str) (pred-last-of (day-of-week 1) (month 5))
+        (re-matches #"(?i)independence day" str) (month-day 7 4)
+        (re-matches #"(?i)labor day" str) (intersect (month 9) (day-of-week 1))
+        (re-matches #"(?i)hall?owe?en( day)?" str) (month-day 10 31)
+      )))
