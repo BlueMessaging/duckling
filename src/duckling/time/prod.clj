@@ -81,30 +81,30 @@
 (defn namedMonthToNumber [map]
       (let [str (map :text)]
       (cond
-        (re-matches #"(?i)january|jan\.?" str)  (month 1)
-        (re-matches #"(?i)february|feb\.?" str) (month 2)
-        (re-matches #"(?i)march|mar\.?" str) (month 3)
-        (re-matches #"(?i)april|apr\.?" str) (month 4)
-        (re-matches #"(?i)may" str) (month 5)
-        (re-matches #"(?i)june|jun\.?" str) (month 6)
-        (re-matches #"(?i)july|jul\.?" str) (month 7)
-        (re-matches #"(?i)august|aug\.?" str) (month 8)
-        (re-matches #"(?i)september|sept?\.?" str) (month 9)
-        (re-matches #"(?i)october|oct\.?" str) (month 10)
-        (re-matches #"(?i)november|nov\.?" str) (month 11)
-        (re-matches #"(?i)december|dec\.?" str) (month 12)
+        (re-matches #"(?i)january|jan|enero|ene\.?" str)  (month 1)
+        (re-matches #"(?i)february|feb|febrero\.?" str) (month 2)
+        (re-matches #"(?i)march|mar|marzo\.?" str) (month 3)
+        (re-matches #"(?i)april|apr|abril|abr\.?" str) (month 4)
+        (re-matches #"(?i)may|mayo" str) (month 5)
+        (re-matches #"(?i)june|jun|junio\.?" str) (month 6)
+        (re-matches #"(?i)july|jul|julio\.?" str) (month 7)
+        (re-matches #"(?i)august|aug|agosto|ago\.?" str) (month 8)
+        (re-matches #"(?i)september|sept|septiembre?\.?" str) (month 9)
+        (re-matches #"(?i)october|oct|octubre\.?" str) (month 10)
+        (re-matches #"(?i)november|nov|noviembre\.?" str) (month 11)
+        (re-matches #"(?i)december|dec|diciembre|dic\.?" str) (month 12)
       )))
       
 (defn namedDayToNumber [map]
       (let [str (map :text)]
       (cond
-        (re-matches #"(?i)monday|mon\.?" str)  (day-of-week 1)
-        (re-matches #"(?i)tuesday|tues?\.?" str) (day-of-week 2)
-        (re-matches #"(?i)wed?nesday|wed\.?" str) (day-of-week 3)
-        (re-matches #"(?i)thursday|thu(rs?)?\.?" str) (day-of-week 4)
-        (re-matches #"(?i)friday|fri\.?" str) (day-of-week 5)
-        (re-matches #"(?i)saturday|sat\.?" str) (day-of-week 6)
-        (re-matches #"(?i)sunday|sun\.?" str) (day-of-week 7)
+        (re-matches #"(?i)monday|mon|lunes|lun?\.?" str)  (day-of-week 1)
+        (re-matches #"(?i)tuesday|tues?|martes|mar?\.?" str) (day-of-week 2)
+        (re-matches #"(?i)wed?nesday|wed|mi(e|é)\.?(rcoles)?|mx|mier?\.?" str) (day-of-week 3)
+        (re-matches #"(?i)thursday|thu(rs?)?|jueves|jue|jue\.?" str) (day-of-week 4)
+        (re-matches #"(?i)friday|fri|viernes|vier|vie\.?" str) (day-of-week 5)
+        (re-matches #"(?i)saturday|sat|s[áa]bado|s(á|a)b\.?" str) (day-of-week 6)
+        (re-matches #"(?i)sunday|sun|domingo|dom\.?" str) (day-of-week 7)
       )))
 
 (defn day-of-month [day]
@@ -293,4 +293,21 @@
         (re-matches #"(?i)independence day" str) (month-day 7 4)
         (re-matches #"(?i)labor day" str) (intersect (month 9) (day-of-week 1))
         (re-matches #"(?i)hall?owe?en( day)?" str) (month-day 10 31)
+      )))
+      
+(defn holidayToDateEsp [map]
+      (let [str (map :text)]
+      (cond
+        (re-matches #"(?i)(d[ií]a del? )?na[bv]idad" str)  (month-day 12 25)
+        (re-matches #"(?i)noche\s?[bv]uena" str) (month-day 12 24)
+        (re-matches #"(?i)noche\s?[bv]ieja" str) (month-day 12 31)
+        (re-matches #"(?i)(d[ií]a del? )?a[nñ]o nue[bv]o" str) (month-day 1 1)
+        (re-matches #"(?i)((d[ií]a del? )san valent[ií]n)|((d[ií]a del? )amor y la amistad)" str) (month-day 2 14)
+        (re-matches #"(?i)(d[ií]a del? )(la )?constitu[sc]i[oó]n" str) (month-day 2 5)
+        (re-matches #"(?i)(d[ií]a del? )(la )?independen[sc]ia" str) (month-day 9 15)
+        (re-matches #"(?i)(d[ií]a del? )(las? )?madres?" str) (month-day 5 10)
+        (re-matches #"(?i)(d[ií]a del? )?[hj]all?owe?en" str) (month-day 10 31)
+        (re-matches #"(?i)(d[ií]a del? )(los? )?muertos" str) (month-day 11 2)
+        (re-matches #"(?i)(d[ií]a del? )(la )?re[vb]olu[sc]i[oó]n" str) (month-day 11 21)
+        (re-matches #"(?i)(d[ií]a del? )(la )?[vb]irgen( de guadalupe)?" str) (month-day 12 12)
       )))
