@@ -45,6 +45,9 @@
 
   "friday after next"
   (datetime 2013 2 22 :day-of-week 2)
+  
+  "first day of june 2016"
+  (datetime 2016 6 1 :day 1 :month 6 :years 2016)
 
 ;   ;; Cycles
 

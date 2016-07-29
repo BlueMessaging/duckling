@@ -432,7 +432,7 @@
   [#"(?i)last (day )?(of|for|from)"
   #"(?i)january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|october|oct|november|nov|december|dec\.?"
   #"(?i)(of|for|from) next year"]
-  (intersect (cycle-nth :year 1) (cycle-nth-after :day -1 (cycle-nth-after :month 1 (namedMonthToNumber %2)))))
+  (intersect (cycle-nth :year 1) (cycle-nth-after :day -1 (cycle-nth-after :month 1 (namedMonthToNumber %2))))
 
   "last day of this month"
   [#"(?i)last (day )?(of|for|from) (this|the) month"]
@@ -446,19 +446,38 @@
   [#"(?i)last (day )?(of|for|from) last month"]
   (cycle-nth-after :day -1 (cycle-nth-after :month 0 (cycle-nth :day 0)))
   
-  "first day of <month> of <year>"
-  [#"(?i)first (day )?(of|for|from)"
+  "ordinal day of <month> of <year>"
+  [(dim :ordinal #(<= 1 (:value %) 31))
+  #"(?i)(day )?(of|for|from)"
   #"(?i)january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|october|oct|november|nov|december|dec\.?"
   #"(?i)(of|for|from)"
   (integer 1000 2100)]
-  (intersect (year (:value %4)) (namedMonthToNumber %2))
+  (intersect (year (:value %5)) (namedMonthToNumber %3) (day-of-month (:value %1)))
   
-  "first day of <month> <year>"
-  [#"(?i)first (day )?(of|for|from)"
+  "ordinal day of <month> <year>"
+  [(dim :ordinal #(<= 1 (:value %) 31))
+  #"(?i)(day )?(of|for|from)"
   #"(?i)january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|october|oct|november|nov|december|dec\.?"
   (integer 1000 2100)]
-  (intersect (year (:value %3)) (namedMonthToNumber %2))
+  (intersect (year (:value %4)) (namedMonthToNumber %3) (day-of-month (:value %1)))
   
+  "ordinal <named day> of <month> <year>"
+  [(dim :ordinal #(<= 1 (:value %) 4))
+  #"(?i)monday|mon|tuesday|tues|wed?nesday|wed|thursday|thu|friday|fri|saturday|sat|sunday|sun\.?"
+  #"(?i)(of|for|from)"
+  #"(?i)january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|october|oct|november|nov|december|dec\.?"
+  (integer 1000 2100)]
+  (intersect (year (:value %5)) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
+  
+  "ordinal <named day> of <month> of <year>"
+  [(dim :ordinal #(<= 1 (:value %) 4))
+  #"(?i)monday|mon|tuesday|tues|wed?nesday|wed|thursday|thu|friday|fri|saturday|sat|sunday|sun\.?"
+  #"(?i)(of|for|from)"
+  #"(?i)january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|october|oct|november|nov|december|dec\.?"
+  #"(?i)(of|for|from)"
+  (integer 1000 2100)]
+  (intersect (year (:value %6)) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
+ 
   "first day of this month"
   [#"(?i)first (day )?(of|for|from) (this|the) month"]
   (cycle-nth-after :month 0 (cycle-nth :day 0))

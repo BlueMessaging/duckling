@@ -224,7 +224,7 @@
   ; xmas del año pasad[ao]
   "xmas del año pasad[ao]"
   [#"(?i)((d[ií]a del? )?na[bv]idad|noche\s?[bv]uena|noche\s?[bv]ieja|(d[ií]a del? )?a[nñ]o nue[bv]o|(d[ií]a del? )san valent[ií]n|(d[ií]a del? )amor y la amistad|(d[ií]a del? )(la )?constitu[sc]i[oó]n|(d[ií]a del? )(la )?independen[sc]ia|(d[ií]a del? )?[hj]all?owe?en|(d[ií]a del? )(las? )?madres?|(d[ií]a del? )(los? )?muertos|(d[ií]a del? )(la )?re[vb]olu[sc]i[oó]n|(d[ií]a del? )(la )?[vb]irgen( de guadalupe)?)"
-  #"(?i)(de el |del )?a[nñ]o (pasad[ao]|anterior)"] ; sequence of two tokens with a time fn
+  #"(?i)(de el |del )?a[nñ]o (pasad[ao]|anterior|que paso)"] ; sequence of two tokens with a time fn
   (intersect (cycle-nth-after :year -1 (cycle-nth :day 0)) (holidayToDateEsp %1))
   
   "año pasad[ao] en <special occasion>"
@@ -235,7 +235,7 @@
   ;xmas del proximo año
   "<special occasion> del proximo año"
   [#"(?i)((d[ií]a del? )?na[bv]idad|noche\s?[bv]uena|noche\s?[bv]ieja|(d[ií]a del? )?a[nñ]o nue[bv]o|(d[ií]a del? )san valent[ií]n|(d[ií]a del? )amor y la amistad|(d[ií]a del? )(la )?constitu[sc]i[oó]n|(d[ií]a del? )(la )?independen[sc]ia|(d[ií]a del? )?[hj]all?owe?en|(d[ií]a del? )(las? )?madres?|(d[ií]a del? )(los? )?muertos|(d[ií]a del? )(la )?re[vb]olu[sc]i[oó]n|(d[ií]a del? )(la )?[vb]irgen( de guadalupe)?)"
-  #"(?i)(del|de el) a[nñ]o (que sigue|siguiente)"] ; sequence of two tokens with a time fn
+  #"(?i)(del|de el) a[nñ]o (que sigue|que viene|siguiente)"] ; sequence of two tokens with a time fn
   (intersect (cycle-nth-after :year 1 (cycle-nth :day 0)) (holidayToDateEsp %1))
   
   ;xmas del proximo año
@@ -246,7 +246,7 @@
   
   ;next years xmas
   "año siguiente en <special occasion>"
-  [#"(?i)a[nñ]o (que sigue|siguiente|pr[o|ó]xim[o|a]) en"
+  [#"(?i)a[nñ]o (que sigue|que viene|siguiente|pr[o|ó]xim[o|a]) en"
   #"(?i)((d[ií]a del? )?na[bv]idad|noche\s?[bv]uena|noche\s?[bv]ieja|(d[ií]a del? )?a[nñ]o nue[bv]o|(d[ií]a del? )san valent[ií]n|(d[ií]a del? )amor y la amistad|(d[ií]a del? )(la )?constitu[sc]i[oó]n|(d[ií]a del? )(la )?independen[sc]ia|(d[ií]a del? )?[hj]all?owe?en|(d[ií]a del? )(las? )?madres?|(d[ií]a del? )(los? )?muertos|(d[ií]a del? )(la )?re[vb]olu[sc]i[oó]n|(d[ií]a del? )(la )?[vb]irgen( de guadalupe)?)"]
   (intersect (cycle-nth-after :year 1 (cycle-nth :day 0)) (holidayToDateEsp %2))
   
@@ -291,33 +291,33 @@
   (pred-nth (namedDayToNumber %1) -2)
   
   "la semana pasada en <day of the week>"
-  [#"(?i)semana (pasada|anterior) en"
+  [#"(?i)semana (pasada|anterior|que paso) en"
   #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"]
   (intersect (cycle-nth-after :week -1 (cycle-nth :day 0)) (namedDayToNumber %2))
 
   "<day of the week> de la semana pasada"
   [#"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
-  #"(?i)de la semana (pasada|anterior)"] ; sequence of two tokens with a time fn
+  #"(?i)de la semana (pasada|anterior|que paso)"] ; sequence of two tokens with a time fn
   (intersect (cycle-nth-after :week -1 (cycle-nth :day 0)) (namedDayToNumber %1))
   
   "semana siguiente en <day of the week>"
-  [#"(?i)semana (que sigue|siguiente|pr[oó]xim[oa]) en"
+  [#"(?i)semana (que sigue|que viene|siguiente|pr[oó]xim[oa]) en"
   #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"]
   (intersect (cycle-nth-after :week 1 (cycle-nth :day 0)) (namedDayToNumber %2))
   
   "siguiente semana en <day of the week>"
-  [#"(?i)(siguiente|pr[o|ó]xim[o|a]) semana en"
+  [#"(?i)(siguiente|pr[oó]xim[oa]) semana en"
   #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"]
   (intersect (cycle-nth-after :week 1 (cycle-nth :day 0)) (namedDayToNumber %2))
   
   "<day of the week> de la semana que sigue"
   [#"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
-  #"(?i)de la semana (que sigue|siguiente|pr[o|ó]xim[o|a])"] ; sequence of two tokens with a time fn
+  #"(?i)de la semana (que sigue|que viene|siguiente|pr[oó]xim[oa])"] ; sequence of two tokens with a time fn
   (intersect (cycle-nth-after :week 1 (cycle-nth :day 0)) (namedDayToNumber %1))
   
   "<day of the week> de la semana que sigue"
   [#"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
-  #"(?i)de la (siguiente|pr[o|ó]xim[o|a]) semana"] ; sequence of two tokens with a time fn
+  #"(?i)de la (siguiente|pr[oó]xim[oa]) semana"] ; sequence of two tokens with a time fn
   (intersect (cycle-nth-after :week 1 (cycle-nth :day 0)) (namedDayToNumber %1))
   
   "esta semana en <day of the week>"
@@ -347,11 +347,11 @@
   
   "<non ordinal> del proximo mes"
   [(integer 1 31)
-  #"(?i)(de el|del?) mes (que sigue|siguiente|pr[oó]ximo)"]
+  #"(?i)(de el|del?) mes (que sigue|que viene|siguiente|pr[oó]ximo)"]
   (intersect (cycle-nth-after :month 1 (cycle-nth :day 0)) (day-of-month (:value %1)))
   
   "el proximo mes el <non ordinal>"
-  [#"(?i)(el )?mes (que sigue|siguiente|pr[oó]ximo) el"
+  [#"(?i)(el )?mes (que sigue|que viene|siguiente|pr[oó]ximo) el"
   (integer 1 31)]
   (intersect (cycle-nth-after :month 1 (cycle-nth :day 0)) (day-of-month (:value %2)))
   
@@ -362,7 +362,7 @@
   
   "<non ordinal> del mes pasad[ao]"
   [(integer 1 31)
-  #"(?i)(de el|del?) mes (pasad[ao]|anterior)"]
+  #"(?i)(de el|del?) mes (pasad[ao]|anterior|que paso)"]
   (intersect (cycle-nth-after :month -1 (cycle-nth :day 0)) (day-of-month (:value %1)))
   
   "<non ordinal> del pasad[ao] mes"
@@ -376,7 +376,7 @@
   (intersect (cycle-nth-after :month -1 (cycle-nth :day 0)) (day-of-month (:value %2)))
   
   "el mes pasad[ao] el <non ordinal>"
-  [#"(?i)(el )?mes (pasad[ao]|anterior|ultimo)( en)? el"
+  [#"(?i)(el )?mes (pasad[ao]|anterior|que paso|ultimo)( en)? el"
   (integer 1 31)]
   (intersect (cycle-nth-after :month -1 (cycle-nth :day 0)) (day-of-month (:value %2)))
   
@@ -401,38 +401,38 @@
   (intersect (cycle-nth-after :month 0 (cycle-nth :day 0)) (day-of-month (:value %2)))
   
   "ultimo dia de <month> de <year>"
-  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)"
+  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   #"(?i)(del?|de el|para( el)?)"
   (integer 1000 2100)]
   (cycle-nth-after :day -1 (cycle-nth-after :month 1 (intersect (year (:value %4)) (namedMonthToNumber %2))))
   
   "ultimo dia de <month> <year>"
-  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)"
+  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   (integer 1000 2100)]
   (cycle-nth-after :day -1 (cycle-nth-after :month 1 (intersect (year (:value %3)) (namedMonthToNumber %2))))
   
   "ultimo dia de <month> de este año"
-  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)"
+  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov\.?"
   #"(?i)(del?|de el|para( el)?) (actual|este) a[ñn]o"]
   (intersect (cycle-nth :year 0) (cycle-nth-after :day -1 (cycle-nth-after :month 1 (namedMonthToNumber %2))))
   
   "ultimo dia de <month> de este año"
-  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)"
+  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)?"
   #"(?i)diciembre|dic\.?"
   #"(?i)(del?|de el|para( el)?) (actual|este) a[ñn]o"]
   (intersect (cycle-nth :year 0) (month-day 12 31))
   
   "ultimo dia de <month> de este año"
-  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)"
+  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov\.?"
   #"(?i)(del?|de el|para( el)?) a[ñn]o (actual|en (curso|progreso))"]
   (intersect (cycle-nth :year 0) (cycle-nth-after :day -1 (cycle-nth-after :month 1 (namedMonthToNumber %2))))
   
   "ultimo dia de <month> de este año"
-  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)"
+  [#"(?i)ultimo (d[ií]a )?(((del?|de el) mes de)|de)?"
   #"(?i)diciembre|dic\.?"
   #"(?i)(del?|de el|para( el)?) a[ñn]o (actual|en (curso|progreso))"]
   (intersect (cycle-nth :year 0) (month-day 12 31))
@@ -446,7 +446,7 @@
   (cycle-nth-after :day -1 (cycle-nth-after :month 1 (cycle-nth :day 0)))
   
   "last day of next month"
-  [#"(?i)ultimo (d[ií]a )?(del? |de el )?mes (que sigue|siguiente|pr[oó]ximo)"]
+  [#"(?i)ultimo (d[ií]a )?(del? |de el )?mes (que sigue|que viene|siguiente|pr[oó]ximo)"]
   (cycle-nth-after :day -1 (cycle-nth-after :month 2 (cycle-nth :day 0)))
   
   "last day of next month"
@@ -454,49 +454,84 @@
   (cycle-nth-after :day -1 (cycle-nth-after :month 2 (cycle-nth :day 0)))
   
   "last day of last month"
-  [#"(?i)ultimo (d[ií]a )?(del? |de el )?mes (pasad[ao]|anterior)"]
+  [#"(?i)ultimo (d[ií]a )?(del? |de el )?mes (pasad[ao]|anterior|que paso)"]
   (cycle-nth-after :day -1 (cycle-nth-after :month 0 (cycle-nth :day 0)))
   
   "last day of last month"
   [#"(?i)ultimo (d[ií]a )?(del? |de el )?(pasad[ao]|anterior) mes"]
   (cycle-nth-after :day -1 (cycle-nth-after :month 0 (cycle-nth :day 0)))
   
-  "first day of <month> of <year>"
-  [#"(?i)primero? (d[ií]a )?(((del|de el) mes de)|de)"
+  "primer dia of <month> of <year>"
+  [#"(?i)primero? (d[ií]a )?(((del|de el) mes de)|de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   #"(?i)(del?|de el)"
   (integer 1000 2100)]
   (intersect (year (:value %4)) (namedMonthToNumber %2))
   
-  "first day of <month> <year>"
-  [#"(?i)primero? (d[ií]a )?(((del|de el) mes de)|de)"
+  "<ordinal> <named-day> del <month> del <year>"
+  [(dim :ordinal #(<= 1 (:value %) 4))
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)(del?|de el)( mes de)?"
+  #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
+  #"(?i)(del?|de el)"
+  (integer 1000 2100)]
+  (intersect (year (:value %6)) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
+  
+  "<ordinal> <named-day> del <month> <year>"
+  [(dim :ordinal #(<= 1 (:value %) 4))
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)(del?|de el)( mes de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   (integer 1000 2100)]
-  (intersect (year (:value %3)) (namedMonthToNumber %2))
+  (intersect (year (:value %5)) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
   
-  "first day of this month"
+  "primer dia of this month"
   [#"(?i)primero? (d[ií]a )?del? (este|actual) mes"]
   (cycle-nth-after :month 0 (cycle-nth :day 0))
   
-  "first day of this month"
+  "primer dia of this month"
   [#"(?i)primero? (d[ií]a )?del? mes (actual| en (curso|progreso))"]
   (cycle-nth-after :month 0 (cycle-nth :day 0))
   
-  "first day of next month"
-  [#"(?i)primero? (d[ií]a )?(del|de el) mes (que sigue|siguiente|pr[oó]ximo)"]
+  "primer dia of next month"
+  [#"(?i)primero? (d[ií]a )?(del|de el) mes (que sigue|que viene|siguiente|pr[oó]ximo)"]
   (cycle-nth-after :month 1 (cycle-nth :day 0))
   
-  "first day of next month"
+  "primer dia of next month"
   [#"(?i)primero? (d[ií]a )?(del|de el) (siguiente|pr[oó]ximo) mes"]
   (cycle-nth-after :month 1 (cycle-nth :day 0))
   
-  "first day of last month"
-  [#"(?i)primero? (d[ií]a )?(del|de el) mes (pasad[ao]|anterior)"]
+  "primer dia of last month"
+  [#"(?i)primero? (d[ií]a )?(del|de el) mes (pasad[ao]|anterior|que paso)"]
   (cycle-nth-after :month -1 (cycle-nth :day 0))
   
-  "first day of last month"
+  "primer dia of last month"
   [#"(?i)primero? (d[ií]a )?(del|de el) (pasad[ao]|anterior) mes"]
   (cycle-nth-after :month -1 (cycle-nth :day 0))
+  
+  "primer <named day> del mes proximo"
+  [#"(?i)primero?"
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)(del|de el) mes (que sigue|que viene|siguiente|pr[oó]ximo)"]
+  (intersect (cycle-nth-after :month 1 (cycle-nth :day 0)) (cycle-nth-after :day 0 (namedDayToNumber %2)))
+  
+  "primer <named day> del proximo mes"
+  [#"(?i)primero?"
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)(del|de el) (siguiente|pr[oó]ximo) mes"]
+  (intersect (cycle-nth-after :month 1 (cycle-nth :day 0)) (cycle-nth-after :day 0 (namedDayToNumber %2)))
+  
+  "primer <named day> del mes actual"
+  [#"(?i)primero?"
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)del? mes (actual| en (curso|progreso))"]
+  (intersect (cycle-nth-after :month 0 (cycle-nth :day 0)) (cycle-nth-after :day 0 (namedDayToNumber %2)))
+  
+  "primer <named day> de este"
+  [#"(?i)primero?"
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)del? (este|actual) mes"]
+  (intersect (cycle-nth-after :month 0 (cycle-nth :day 0)) (cycle-nth-after :day 0 (namedDayToNumber %2)))
   
   ;;
   ;; This, Next, Last
@@ -556,7 +591,7 @@
   
   "last <day-of-week>"
   [#"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
-  #"(?i)(pasad[ao]|ultimo|anterior)"]
+  #"(?i)(pasad[ao]|ultimo|anterior|que paso)"]
   (pred-nth (namedDayToNumber %1) -1)
   
   "this past|last <named-month> <day-of-month> (non ordinal)" ;
@@ -568,7 +603,7 @@
   "this past|last <named-month> <day-of-month> (non ordinal)" ;
   [#"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   (integer 1 31)
-  #"(?i)(pasad[ao]|ultimo|anterior)"]
+  #"(?i)(pasad[ao]|ultimo|anterior|que paso)"]
   (pred-nth (intersect (namedMonthToNumber %1) (day-of-month (:value %2))) -1)
   
   "this past|last <day-of-month> (non ordinal) of <named-month>"
@@ -582,7 +617,7 @@
   [(integer 1 31)
   #"(?i)de"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
-  #"(?i)(pasad[ao]|ultimo|anterior)"]
+  #"(?i)(pasad[ao]|ultimo|anterior|que paso)"]
   (pred-nth (intersect (namedMonthToNumber %3) (day-of-month (:value %1))) -1)
   
   "this past|last <day-of-month> (non ordinal) <named-month>" ;
@@ -594,7 +629,7 @@
   "this past|last <day-of-month> (non ordinal) <named-month>" ;
   [(integer 1 31)
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
-  #"(?i)(pasad[ao]|ultimo|anterior)"]
+  #"(?i)(pasad[ao]|ultimo|anterior|que paso)"]
   (pred-nth (intersect (namedMonthToNumber %2) (day-of-month (:value %1))) -1)
   
   "last <special occasion>"
@@ -604,7 +639,7 @@
   
   "last <special occasion>"
   [#"(?i)((d[ií]a del? )?na[bv]idad|noche\s?[bv]uena|noche\s?[bv]ieja|(d[ií]a del? )?a[nñ]o nue[bv]o|(d[ií]a del? )san valent[ií]n|(d[ií]a del? )amor y la amistad|(d[ií]a del? )(la )?constitu[sc]i[oó]n|(d[ií]a del? )(la )?independen[sc]ia|(d[ií]a del? )?[hj]all?owe?en|(d[ií]a del? )(las? )?madres?|(d[ií]a del? )(los? )?muertos|(d[ií]a del? )(la )?re[vb]olu[sc]i[oó]n|(d[ií]a del? )(la )?[vb]irgen( de guadalupe)?)"
-  #"(?i)(pasad[ao]|ultimo|anterior)"]
+  #"(?i)(pasad[ao]|ultimo|anterior|que paso)"]
   (pred-nth (holidayToDateEsp %1) -1)
   
   "<special occasion> before last"
