@@ -12,7 +12,7 @@
    :grain :minute}
 
   "hour (unit-of-duration)"
-  #"(?i)h(ora)?s?"
+  #"(?i)ho?ra?s?"
   {:dim :unit-of-duration
    :grain :hour}
 
@@ -47,7 +47,7 @@
   ;  :value (duration (:grain %2) 1)}
 
   "en <duration>"
-  [#"(?i)en" (dim :duration)]
+  [#"(?i)(en|dentro de) (menos\s?de|unos)?" (dim :duration)]
   (in-duration (:value %2))
 
   "hace <duration>"
