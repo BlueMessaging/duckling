@@ -72,36 +72,36 @@
   ; same thing, with "/" in between like "february/14/1999"
   "intersect by / no latent"
   [#"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer 1 31)
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer 1000 2100)] ; sequence of two tokens with a time fn
   (intersect (year (:value %5)) (namedMonthToNumber %1) (day-of-month (:value %3)))
   
   ; same thing, with "/" in between like "february/14/99"
   "intersect by / no latent"
   [#"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer 1 31)
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer -10000 999)] ; sequence of two tokens with a time fn
   (intersect (assoc (year (:value %5)) :latent true) (namedMonthToNumber %1) (day-of-month (:value %3)))
   
   ; same thing, with "/" in between like "14/february/1999"
   "intersect by / no latent"
   [(integer 1 31)
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer 1000 2100)] ; sequence of two tokens with a time fn
   (intersect (year (:value %5)) (namedMonthToNumber %3) (day-of-month (:value %1)))
   
   ; same thing, with "/" in between like "14/february/99"
   "intersect by / no latent"
   [(integer 1 31)
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
-  #"(?i)/|-"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer -10000 999)] ; sequence of two tokens with a time fn
   (intersect (assoc (year (:value %5)) :latent true) (namedMonthToNumber %3) (day-of-month (:value %1)))
   
@@ -128,11 +128,11 @@
   ; Formatted dates and times
 
   "dd/mm/yyyy"
-  #"(3[01]|[12]\d|0?[1-9])[/-](0?[1-9]|1[0-2])[-/](\d{2,4})"
+  #"(3[01]|[12]\d|0?[1-9])\s?[-/_.,]\s?(0?[1-9]|1[0-2])\s?[-/_.,]\s?(\d{2,4})"
   (parse-dmy (first (:groups %1)) (second (:groups %1)) (nth (:groups %1) 2) true)
 
-  "yyyy-mm-dd"
-  #"(\d{2,4})[/-](0?[1-9]|1[0-2])[/-](3[01]|[12]\d|0?[1-9])"
+  "yyyy-mm-dd    stricted to yyyy"
+  #"(\d{4})\s?[-/_.,]\s?(0?[1-9]|1[0-2])\s?[-/_.,]\s?(3[01]|[12]\d|0?[1-9])"
   (parse-dmy (nth (:groups %1) 2) (second (:groups %1)) (first (:groups %1)) true)
   
   ;; Special occasions followed by year
@@ -188,15 +188,15 @@
   ;; Relative
   
   "right now"
-  #"ahor(it)?a|en\s?seguida|cuanto antes|(en este momento)"
+  #"a?h?or(it)?a|en\s?seguida|cuanto\s?antes|en\s?(este|un)\s?mo(m|n)ento|ya|in?mediat(amente|o)|lo m(a|á)s pron?to"
   (cycle-nth :second 0)
   
   "today"
-  #"(?i)hoy"
+  #"(?i)(hoy|oy|oi)"
   (cycle-nth :day 0)
 
   "tomorrow"
-  #"(?i)ma(n|ñ)ana"
+  #"(?i)ma(n|ñ|\?)ana"
   (cycle-nth :day 1)
 
   "yesterday"
@@ -204,7 +204,7 @@
   (cycle-nth :day -1)
   
   "the day after tomorrow"
-  #"(?i)(pasad[ao]\s?|despu(é|e)s de )ma(n|ñ)ana"
+  #"(?i)(pasad[ao]\s?|despu(é|e)s de )ma(n|ñ|\?)ana"
   (cycle-nth :day 2)
 
   "the day before yesterday"
@@ -306,10 +306,10 @@
   (intersect (cycle-nth-after :week 1 (cycle-nth :day 0)) (namedDayToNumber %2))
   
   "siguiente semana en <day of the week>"
-  [#"(?i)(siguiente|pr[oó]xim[oa]) semana en"
+  [#"(?i)(pr[oó]xim[oa]|siguiente) semana en"
   #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"]
   (intersect (cycle-nth-after :week 1 (cycle-nth :day 0)) (namedDayToNumber %2))
-  
+
   "<day of the week> de la semana que sigue"
   [#"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
   #"(?i)de la semana (que sigue|que viene|siguiente|pr[oó]xim[oa])"] ; sequence of two tokens with a time fn
@@ -339,7 +339,7 @@
   [#"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
   #"(?i)de la semana( actual| en (curso|progreso))"] ; sequence of two tokens with a time fn
   (intersect (cycle-nth-after :week 0 (cycle-nth :day 0)) (namedDayToNumber %1))
-  
+
   "<non ordinal> del proximo mes"
   [(integer 1 31)
   #"(?i)(de el|del?) (pr[oó]ximo|siguiente) mes"]
@@ -484,7 +484,32 @@
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   (integer 1000 2100)]
   (intersect (year (:value %5)) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
-  
+
+  "<ordinal> <named-day> del <month> del año actual"
+  [(dim :ordinal #(<= 1 (:value %) 4))
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)(de(\s?e)?l?)( mes de)?"
+  #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"]
+  (intersect (:year 0) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
+
+  "<day-of-month> de <named-month> del año actual" ; 4 de julio
+  [(integer 1 31) 
+   #"(?i)(de(\s?e?)l?)"
+   #"(?i)(enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic)\.?"]
+  (intersect (cycle-nth :year 0) (namedMonthToNumber %3) (day-of-month (:value %1)))
+
+  "siguiente semana"
+  [#"(?i)(siguiente|pr[o|ó]xima) semana"]
+  (cycle-nth-after :week 1 (cycle-nth :day 0))
+
+  "este mes"
+  [#"(?i)(este|actual) mes"]
+  (cycle-nth-after :month 0 (cycle-nth :day 0))
+
+  "mes actual"
+  [#"(?i)mes (este|actual)"]
+  (cycle-nth-after :month 0 (cycle-nth :day 0))
+
   "primer dia of this month"
   [#"(?i)primero? (d[ií]a )?del? (este|actual) mes"]
   (cycle-nth-after :month 0 (cycle-nth :day 0))
@@ -533,13 +558,24 @@
   #"(?i)del? (este|actual) mes"]
   (intersect (cycle-nth-after :month 0 (cycle-nth :day 0)) (cycle-nth-after :day 0 (namedDayToNumber %2)))
   
+  "primer <named day> del mes"
+  [#"(?i)primero?"
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)del? mes"]
+  (intersect (cycle-nth-after :month 0 (cycle-nth :day 0)) (cycle-nth-after :day 0 (namedDayToNumber %2)))
   ;;
   ;; This, Next, Last
 
   ;; assumed to be strictly in the future:
   ;; "this Monday" => next week if today is Monday
+  "el <day-of-week>"
+  [#"(?i)(este|el) (d(i|í)a)?"
+  #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"
+  #"(?i)(anterior|pasado) ?"]
+  (pred-nth-not-immediate (namedDayToNumber %2) -1)
+
   "este <day-of-week>"
-  [#"(?i)(este|pr[oó]ximo|siguiente)"
+  [#"(?i)(este|pr[oó]ximo|siguiente|el) (d(i|í)a)?"
   #"(?i)(lunes|lun?|martes|mar?|mi[eé]\.?(rcoles)?|mx|mier?|jueves|jue|jue|viernes|vier|vie|s[áa]bado|s[áa]b|domingo|dom)(\.)?"]
   (pred-nth-not-immediate (namedDayToNumber %2) 0)
   
