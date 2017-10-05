@@ -1,5 +1,15 @@
 (
   ;; generic
+  "<day-of-month> <named-month> del presente año" ; 4 julio
+  [(integer 1 31)
+   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"]
+  (intersect (cycle-nth :year 0) (namedMonthToNumber %2) (day-of-month (:value %1)))
+
+  "<day-of-month> de <named-month> del año actual" ; 4 de julio
+  [(integer 1 31) 
+   #"(?i)de?"
+   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"]
+  (intersect (cycle-nth :year 0) (namedMonthToNumber %3) (day-of-month (:value %1)))
 
   "<day-of-month> <named-month> <year>" ; 4 julio 81
   [(integer 1 31) 
@@ -90,7 +100,7 @@
   ; same thing, with "/" in between like "14/february/1999"
   "intersect by / no latent"
   [(integer 1 31)
-  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
+  #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)+"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"
   #"(?i)(\s?/\s?|\s?-\s?|\s?_\s?|\s?\.\s?|\s?,\s?)"
   (integer 1000 2100)] ; sequence of two tokens with a time fn
@@ -128,11 +138,11 @@
   ; Formatted dates and times
 
   "dd/mm/yyyy"
-  #"(3[01]|[12]\d|0?[1-9])\s?[-/_.,]\s?(0?[1-9]|1[0-2])\s?[-/_.,]\s?(\d{2,4})"
+  #"(3[01]|[12]\d|0?[1-9])\s?[-/_.,\s]+\s?(0?[1-9]|1[0-2])\s?[-/_.,\s]+\s?(\d{2,4})"
   (parse-dmy (first (:groups %1)) (second (:groups %1)) (nth (:groups %1) 2) true)
 
   "yyyy-mm-dd    stricted to yyyy"
-  #"(\d{4})\s?[-/_.,]\s?(0?[1-9]|1[0-2])\s?[-/_.,]\s?(3[01]|[12]\d|0?[1-9])"
+  #"(\d{4})\s?[-/_.,\s]+\s?(0?[1-9]|1[0-2])\s?[-/_.,\s]+\s?(3[01]|[12]\d|0?[1-9])"
   (parse-dmy (nth (:groups %1) 2) (second (:groups %1)) (first (:groups %1)) true)
   
   ;; Special occasions followed by year
@@ -491,12 +501,6 @@
   #"(?i)(de(\s?e)?l?)( mes de)?"
   #"(?i)enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic\.?"]
   (intersect (:year 0) (namedMonthToNumber %4) (cycle-nth-after :week (:value %1) (cycle-nth :day 0)) (namedDayToNumber %2))
-
-  "<day-of-month> de <named-month> del año actual" ; 4 de julio
-  [(integer 1 31) 
-   #"(?i)(de(\s?e?)l?)"
-   #"(?i)(enero|ene|febrero|feb|marzo|mar|abril|abr|mayo|junio|jun|julio|jul|agosto|ago|septiembre|sept|octubre|oct|noviembre|nov|diciembre|dic)\.?"]
-  (intersect (cycle-nth :year 0) (namedMonthToNumber %3) (day-of-month (:value %1)))
 
   "siguiente semana"
   [#"(?i)(siguiente|pr[o|ó]xima) semana"]
